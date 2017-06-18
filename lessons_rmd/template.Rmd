@@ -8,7 +8,7 @@ output: html_document
 
 We will now create a document that contains a full output from our analysis.  The first step is to write the code that munges our data. It will loop over all the VCF files, read them together and combine them into a single dataframe
 
-```{r munge data, echo=FALSE,warning=FALSE,message=FALSE}
+```{r munge data, echo=FALSE, warning=FALSE, message=FALSE}
 library("vcfR")
 library("dplyr")
 
@@ -18,7 +18,8 @@ library("dplyr")
 # as described here:
 # https://github.com/JasonJWilliamsNY/wrangling-genomics/blob/gh-pages/lessons/02-variant-calling-workflow.md
 
-my_vcf_files <- list.files(path = "~/wkspace/r-novice-gapminder/data/",pattern = "\\.vcf")
+my_vcf_files <- list.files(path = "../data/", pattern = "\\.vcf")
+my_vcf_files <- paste0("../data/", my_vcf_files)
 
 number_of_strains <- length(my_vcf_files)
 
@@ -51,6 +52,10 @@ colnames(all_vcf)[1] <- "STRAIN"
 
 # Convert to df for use by dplyr
 all_vcf <- as.data.frame(all_vcf)
+
+# fix numeric columns stored as factors
+all_vcf$POS <- as.numeric(as.character(all_vcf$POS))
+all_vcf$QUAL <- as.numeric(as.character(all_vcf$QUAL))
 
 ```
 
@@ -102,13 +107,13 @@ all_vcf$AF <- as.numeric(unlist(lapply(strsplit(all_vcf$INFO,";"),FUN=function(x
 
 ## Goals
 
-Building off what's we've learned today, create your own analysis as a stand alone reproducible markdown document. You should use any element of what we've done so far. It should have the following elements.
+Building off what we've learned today, create your own analysis as a stand alone reproducible markdown document. You should use any element of what we've done so far. It should have the following elements.
 
 *Goals* 
 
-1. Should be completely reproducible
+1. Should be completely reproducible (able to run start to finish from a folder of imput data and the Rmd file)
 2. Code chunks should be properly labeled
-3. The document should have several figures
-4. Each figure should support an accompanying piece of analysis
+3. The document should at least one boxplot and at least one scatterplot
+4. Each figure should support an accompanying piece of quantitative analysis, and some descriptive markdown text 
 
 
